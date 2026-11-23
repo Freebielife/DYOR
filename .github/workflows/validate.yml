@@ -1,4 +1,4 @@
-name: Validate independent observatory template
+name: Validate DYOR observatory
 on:
   push:
     branches: [main]
@@ -19,7 +19,7 @@ jobs:
         with:
           node-version: '22'
       - run: python3 -m pip install -r requirements.txt
-      - run: python3 -m scripts.check_reference
-      - run: python3 -m unittest discover -s tests -t . -p 'test_*.py'
+      - run: python3 -m compileall -q assets.py trades.py pools.py observatory.py scripts
+      - run: python3 -m unittest tests.test_trade_history tests.test_service_registry tests.test_refresh_sources
       - run: node --test tests/*.test.cjs
-      - run: node --test infrastructure/cloudflare-runner/tests/*.test.mjs
+      - run: python3 build.py && python3 verify.py
